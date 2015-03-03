@@ -1,42 +1,27 @@
 <project name="Sepia" default="dist" basedir=".">
-    <description>
-        Sepia
-    </description>
+  <description>Sepia</description>
  
-  <!-- set global properties for this build -->
   <property name="projectName" value="sepia"/>
-  <property name="src" location="sepia"/>
+  <property name="src"   location="src"/>
   <property name="build" location="build"/>
   <property name="dist"  location="dist"/>
  
   <target name="init">
-        <!-- Create the time stamp -->
-        <tstamp/>
-        <!-- Create the build directory structure used by compile -->
-        <mkdir dir="${build}"/>
+    <tstamp/>
+    <mkdir dir="${build}"/>
   </target>
  
-  <target name="compile" depends="init"
-    description="compile the source " >
-        <!-- Compile the java code from ${src} into ${build} -->
+  <target name="compile" depends="init" description="compile">
     <javac srcdir="${src}" destdir="${build}"/>
   </target>
  
-  <target name="dist" depends="compile"
-    description="generate the distribution" >
- 
-    <!-- Create the distribution directory -->
-        <mkdir dir="${dist}/lib"/>
- 
-        <!-- Put everything in ${build} into the {$projectName}-${DSTAMP}.jar file -->
-        <jar jarfile="${dist}/lib/${projectName}.jar" basedir="${build}"/>
+  <target name="dist" depends="compile" description="package jar">
+    <mkdir dir="${dist}"/>
+    <jar jarfile="${dist}/${projectName}.jar" basedir="${build}"/>
   </target>
  
-  <target name="clean"
-        description="clean up" >
- 
-        <!-- Delete the ${build} and ${dist} directory trees -->
-        <delete dir="${build}"/>
-        <delete dir="${dist}"/>
+  <target name="clean">
+    <delete dir="${build}"/>
+    <delete dir="${dist}"/>
   </target>
 </project>
