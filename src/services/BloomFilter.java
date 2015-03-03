@@ -356,6 +356,13 @@ public class BloomFilter {
 	public int getHashCount() {
 		return mhash.getHashCount();
 	}
+
+	/**
+	 * @return the MultiHash used by the BloomFilter
+	 */
+	public MultiHash getHash() {
+		return mhash;
+	}
 	
 	/**
 	 * Resets the BloomFilter to all zeros
