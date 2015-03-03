@@ -1,4 +1,3 @@
-Sepia
-=====
-
-Sepia (http://sepia.ee.ethz.ch/) set up with an ant file for easy build
+#Sepia
+The most recent version of SEPIA (http://sepia.ee.ethz.ch/), with added
+Ant script for easy modification.
