@@ -18,6 +18,7 @@ package services;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 
@@ -358,13 +359,6 @@ public class BloomFilter {
 	}
 
 	/**
-	 * @return the MultiHash used by the BloomFilter
-	 */
-	public MultiHash getHash() {
-		return mhash;
-	}
-	
-	/**
 	 * Resets the BloomFilter to all zeros
 	 */
 	public void reset(){
@@ -548,7 +542,52 @@ public class BloomFilter {
 	public int getCount(int val){
 		return getCount(intToByteArr(val));
 	}
+
+	/**
+	 * For a counting Bloom filter this function returns the indices to which
+	 * this element alone hashes. These are the array positions to which the
+	 * element hashes which have a count equal to one.
+	 * @param val value to get unique indices for
+	 * @return an array of indices unique to this element
+	 */
+	public int [] getUniqueIndices(byte[] val){
+		if(!b_cnt || !check(val)){
+			return new int[0];
+		}
+
+		int count = 0;
+		int [] indices = mhash.hash(val);
+		for(int i = 0; i < indices.length; i++){
+			if(bf[indices[i]]==1){
+				indices[count] = indices[i];
+				count++;
+			}
+		}
+		return Arrays.copyOf(indices, count);
+	}
 	
+	/**
+	 * For a counting Bloom filter this function returns the indices to which
+	 * this element alone hashes. These are the array positions to which the
+	 * element hashes which have a count equal to one.
+	 * @param val string to get unique indices for, assumes ISO-8859-1 encoding
+	 * @return an array of indices unique to this element
+	 */
+	public int [] getUniqueIndices(String val){
+		int [] unique = new int[0];
+		try{
+			// use a specific encoding to guarantee the same outcome on all platforms
+			byte [] msg = val.getBytes("ISO-8859-1");
+			unique = getUniqueIndices(msg);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return unique;
+	}
+
+	public int [] getUniqueIndices(int val){
+		return getUniqueIndices(intToByteArr(val));
+	}
 	
 	/**
 	 * Tries to remove an element from the BloomFilter. If it is a non-counting filter removing
